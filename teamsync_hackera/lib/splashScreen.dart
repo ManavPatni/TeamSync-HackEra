@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:teamsync_hackera/main.dart';
+import 'package:teamsync_hackera/auth/signIn.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -15,11 +15,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Timer(Duration(milliseconds: 2500), () {
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const MyHomePage(title: "Home")));
+          context, MaterialPageRoute(builder: (context) => SignIn()));
     });
-
   }
 
   @override
@@ -53,7 +50,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: TextStyle(
                     fontFamily: "Poppins",
                     fontWeight: FontWeight.w400,
-                    fontSize: 15)))
+                    fontSize: 15)
+            )
+        )
       ]),
     );
   }
