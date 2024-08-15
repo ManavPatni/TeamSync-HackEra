@@ -1,7 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignIn extends StatelessWidget {
-  const SignIn({Key? key}) : super(key: key); // Added constructor with Key
+
+   //GoogleSignIn instance
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+    ],
+  );
+
+  // Function for Google Sign-In as Admin
+  Future<void> _handleAdminSignIn() async {
+    try {
+      final GoogleSignInAccount? account = await _googleSignIn.signIn();
+      if (account != null) {
+        // Successfully signed in
+        print('Admin signed in: ${account.email}');
+        // TODO: Navigate to admin dashboard or other relevant page
+      } else {
+        // The user canceled the sign-in
+        print('Admin sign-in canceled');
+      }
+    } catch (error) {
+      print('Error signing in as admin: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +61,8 @@ class SignIn extends StatelessWidget {
                 children: [
                   // Admin Button
                   OutlinedButton.icon(
-                    onPressed: () {
-                      // TODO: Define admin sign-in logic here
+                    onPressed: () async {
+                      await _handleAdminSignIn();
                     },
                     icon: Image.asset(
                       'assets/images/ic_google.png',

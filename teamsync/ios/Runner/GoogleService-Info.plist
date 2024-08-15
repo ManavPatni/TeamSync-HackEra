@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>614134597109-rrc2s2bdtj5j77dcb8m986b49plk4hmv.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.614134597109-rrc2s2bdtj5j77dcb8m986b49plk4hmv</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>614134597109-a29ikchpfj5hd7hqnkeetn0vfgd8ae2i.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAnCEiblgqPODBqoNo6f9Y6JBd-VCMICZY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>614134597109</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mnvpatni.teamsync</string>
+	<key>PROJECT_ID</key>
+	<string>teamsync---heackera</string>
+	<key>STORAGE_BUCKET</key>
+	<string>teamsync---heackera.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:614134597109:ios:3864f94875a4666dbb8cbc</string>
+</dict>
+</plist>

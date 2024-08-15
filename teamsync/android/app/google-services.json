@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "614134597109",
+    "project_id": "teamsync---heackera",
+    "storage_bucket": "teamsync---heackera.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614134597109:android:44a2162fb7e676b2bb8cbc",
+        "android_client_info": {
+          "package_name": "com.mnvpatni.teamsync"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "614134597109-a29ikchpfj5hd7hqnkeetn0vfgd8ae2i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mnvpatni.teamsync",
+            "certificate_hash": "2e8d37b25987874fab104f087b305b9255466951"
+          }
+        },
+        {
+          "client_id": "614134597109-1apo4e3l6ou18leeotn4sgfsgn4ro49d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDYG_ZC33UnqTNIYILgE6E3x4-yA9iqMU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "614134597109-1apo4e3l6ou18leeotn4sgfsgn4ro49d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "614134597109-rrc2s2bdtj5j77dcb8m986b49plk4hmv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mnvpatni.teamsync"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
