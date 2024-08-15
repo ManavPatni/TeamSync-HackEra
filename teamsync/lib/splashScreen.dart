@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:teamsync_hackera/auth/signIn.dart';
+import 'package:teamsync/auth/signIn.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

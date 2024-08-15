@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teamsync_hackera/splashScreen.dart';
+import 'package:teamsync/splashScreen.dart';
 
 void main() {
   runApp(const MyApp());
