@@ -57,6 +57,12 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     //Analytics
     implementation("com.google.firebase:firebase-analytics")
+    //Auth
+    implementation("com.google.firebase:firebase-auth")
+
+    //Google Play Services
+    //Google Auth
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 
     //Image loading library Glider
     implementation("com.github.bumptech.glide:glide:4.16.0")

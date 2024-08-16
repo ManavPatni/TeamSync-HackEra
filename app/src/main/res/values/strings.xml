@@ -1,4 +1,11 @@
 <resources>
+
     <string name="app_name">TeamSync</string>
     <string name="app_slogan">Syncing Teams,\nStreamlining Success</string>
+
+    <!--SignIn Activity-->
+    <string name="continue_as_admin">Continue As Admin</string>
+    <string name="or">Or</string>
+    <string name="continue_as_volunteer">Continue As Volunteer</string>
+
 </resources>
