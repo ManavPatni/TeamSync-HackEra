@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.mnvpatni.teamsync.admin.AdminDashboard
 import com.mnvpatni.teamsync.auth.SignInActivity
 import com.mnvpatni.teamsync.databinding.ActivitySplashScreenBinding
 import com.mnvpatni.teamsync.sharedPrefs.AuthSharedPref
+import com.mnvpatni.teamsync.volunteer.VolunteerDashboard
 import java.util.Timer
 import kotlin.concurrent.timerTask
 
@@ -27,7 +29,6 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         authSharedPref = AuthSharedPref(this)
 
         when {
@@ -35,7 +36,11 @@ class SplashScreen : AppCompatActivity() {
                 exit(SignInActivity::class.java)
             }
             else -> {
-                exit(MainActivity::class.java)
+                if (authSharedPref.userType() == "Admin") {
+                    exit(AdminDashboard::class.java)
+                } else {
+                    exit(VolunteerDashboard::class.java)
+                }
             }
         }
     }

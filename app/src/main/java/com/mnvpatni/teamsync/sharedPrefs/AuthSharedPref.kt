@@ -36,6 +36,14 @@ class AuthSharedPref(private val context: Context) {
         return sharedPreferences.getString("userName", null)
     }
 
+    fun setUserType(userType: String) {
+        sharedPreferences.edit().putString("userType", userType).apply()
+    }
+
+    fun userType(): String? {
+        return sharedPreferences.getString("userType", null)
+    }
+
     fun setUserPost(userPost: String) {
         sharedPreferences.edit().putString("userPost", userPost).apply()
     }

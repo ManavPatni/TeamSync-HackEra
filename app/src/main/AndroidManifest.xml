@@ -13,6 +13,12 @@
         android:theme="@style/Theme.TeamSync"
         tools:targetApi="31">
         <activity
+            android:name=".volunteer.VolunteerDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".admin.AdminDashboard"
+            android:exported="false" />
+        <activity
             android:name=".auth.SignInActivity"
             android:exported="false" />
         <activity
