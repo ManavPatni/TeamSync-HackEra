@@ -8,4 +8,8 @@
     <string name="or">Or</string>
     <string name="continue_as_volunteer">Continue As Volunteer</string>
 
+    <!--Volunteer Dashboard-->
+    <string name="teams">Teams</string>
+    <string name="sort_by">Sort By</string>
+
 </resources>
