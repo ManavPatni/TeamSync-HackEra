@@ -1,11 +1,14 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Base.Theme.TeamSync" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.TeamSync" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
 
         <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <!--Transition for shared elements-->
+        <item name="android:windowSharedElementEnterTransition">@transition/shared_transition</item>
+        <item name="android:windowSharedElementExitTransition">@transition/shared_transition</item>
+
     </style>
 
-    <style name="Theme.TeamSync" parent="Base.Theme.TeamSync" />
 </resources>

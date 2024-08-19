@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.mnvpatni.teamsync.MainActivity
 import com.mnvpatni.teamsync.R
 import com.mnvpatni.teamsync.databinding.ActivitySignInBinding
 import com.mnvpatni.teamsync.sharedPrefs.AuthSharedPref
@@ -73,7 +72,7 @@ class SignInActivity : AppCompatActivity() {
                 "Welcome ${authSharedPref.userName()!!} 👋👋!!",
                 Snackbar.LENGTH_SHORT
             ).show()
-            startActivity(Intent(this, MainActivity::class.java))
+            //startActivity(Intent(this, MainActivity::class.java))
             exit()
         } else {
             pd.show()
@@ -134,8 +133,8 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun exit() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        //val intent = Intent(this, MainActivity::class.java)
+        //startActivity(intent)
         finishAffinity()
     }
 }
