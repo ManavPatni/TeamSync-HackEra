@@ -4,9 +4,11 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -18,7 +20,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.mnvpatni.teamsync.R
 import com.mnvpatni.teamsync.databinding.ActivitySignInBinding
+import com.mnvpatni.teamsync.network.RetrofitInstance
 import com.mnvpatni.teamsync.sharedPrefs.AuthSharedPref
+import kotlinx.coroutines.launch
 
 class SignInActivity : AppCompatActivity() {
 
@@ -69,7 +73,7 @@ class SignInActivity : AppCompatActivity() {
         if (authSharedPref.isSignedIn()) {
             Snackbar.make(
                 binding.main,
-                "Welcome ${authSharedPref.userName()!!} 👋👋!!",
+                "Welcome ${auth.currentUser?.displayName!!} 👋👋!!",
                 Snackbar.LENGTH_SHORT
             ).show()
             //startActivity(Intent(this, MainActivity::class.java))
@@ -111,11 +115,10 @@ class SignInActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 // Save onboarding status and login type in SharedPreferences
                 authSharedPref.setAuthStatus(true)
-                authSharedPref.setUserName(auth.currentUser?.displayName!!)
                 authSharedPref.setUID(auth.currentUser!!.uid)
                 Snackbar.make(
                     binding.main,
-                    "Welcome ${authSharedPref.userName()!!} 👋👋!!",
+                    "Welcome ${auth.currentUser?.displayName!!} 👋👋!!",
                     Snackbar.LENGTH_SHORT
                 ).show()
                 exit()
@@ -129,6 +132,19 @@ class SignInActivity : AppCompatActivity() {
     private fun ProgressDialog.dismissIfShowing() {
         if (isShowing) {
             dismiss()
+        }
+    }
+
+    private fun verifyMember(uid: String, userType: String) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitInstance.api.verifyCommitteeMember(uid,userType)
+                authSharedPref.setUserPost(response.post)
+                authSharedPref.setAccessTo(response.access_to)
+            } catch (e: Exception) {
+                Log.d("Api error", e.message.toString())
+                Snackbar.make(binding.root, "An unexpected error occurred!!", Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 

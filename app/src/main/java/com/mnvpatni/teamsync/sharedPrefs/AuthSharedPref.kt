@@ -28,14 +28,6 @@ class AuthSharedPref(private val context: Context) {
         return sharedPreferences.getString("uid", null)
     }
 
-    fun setUserName(userName: String) {
-        sharedPreferences.edit().putString("userName", userName).apply()
-    }
-
-    fun userName(): String? {
-        return sharedPreferences.getString("userName", null)
-    }
-
     fun setUserType(userType: String) {
         sharedPreferences.edit().putString("userType", userType).apply()
     }
@@ -52,5 +44,12 @@ class AuthSharedPref(private val context: Context) {
         return sharedPreferences.getString("userPost", null)
     }
 
+    fun setAccessTo(accessTo: String) {
+        sharedPreferences.edit().putString("accessTo", accessTo).apply()
+    }
+
+    fun accessTo(): String? {
+        return sharedPreferences.getString("accessTo", null)
+    }
 
 }

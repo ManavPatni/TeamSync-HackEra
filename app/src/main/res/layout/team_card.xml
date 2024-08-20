@@ -3,35 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv_team"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_150sdp"
+    android:layout_height="@dimen/_100sdp"
     android:layout_marginStart="@dimen/_10sdp"
     android:layout_marginEnd="@dimen/_10sdp"
     android:layout_marginBottom="@dimen/_10sdp">
 
-    <ImageView
-        android:id="@+id/iv_teamPic"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@null"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bg_team"
-        android:tint="#A1000000" />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/_20sdp"
+        android:paddingEnd="@dimen/_20sdp">
 
         <ImageView
             android:id="@+id/iv_team"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
             android:src="@drawable/ic_team"
-            app:tint="@color/white"
+            app:tint="@color/black"
             android:contentDescription="@null"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:layout_marginStart="@dimen/_20sdp"/>
+            android:layout_marginTop="@dimen/_15sdp"/>
         
         <TextView
             android:id="@+id/tv_teamSize"
@@ -39,11 +31,11 @@
             android:layout_height="wrap_content"
             android:text="4"
             android:fontFamily="@font/poppins_bold"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_18ssp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16ssp"
             android:layout_toEndOf="@+id/iv_team"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:layout_marginStart="@dimen/_10sdp"/>
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_15sdp"/>
 
         <TextView
             android:id="@+id/tv_teamName"
@@ -51,11 +43,11 @@
             android:layout_height="wrap_content"
             android:text="Team Name"
             android:fontFamily="@font/poppins_bold"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_18ssp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15ssp"
             android:layout_marginBottom="-5dp"
-            android:layout_above="@+id/tv_collegeName"
-            android:layout_marginStart="@dimen/_20sdp"/>
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_above="@+id/tv_collegeName"/>
 
         <TextView
             android:id="@+id/tv_collegeName"
@@ -63,11 +55,17 @@
             android:layout_height="wrap_content"
             android:text="College Name"
             android:fontFamily="@font/poppins_medium"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_13ssp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_10sdp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_forward"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
 

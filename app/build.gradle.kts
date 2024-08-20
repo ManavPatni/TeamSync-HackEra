@@ -76,6 +76,10 @@ dependencies {
     //lottie
     implementation("com.airbnb.android:lottie:6.5.0")
 
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
     //cameraX
     val camerax_version = "1.3.4"
     implementation("androidx.camera:camera-camera2:${camerax_version}")
