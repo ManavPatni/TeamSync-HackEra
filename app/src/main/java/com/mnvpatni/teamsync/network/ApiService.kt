@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface ApiService {
 
     //Verify committee members
-    @POST("/verify/committee/member")
+    @POST("verify/committee/member")
     suspend fun verifyCommitteeMember(
         @Query("uid") uid: String,
         @Query("user_type") userType: String
