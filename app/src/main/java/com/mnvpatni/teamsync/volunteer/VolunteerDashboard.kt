@@ -1,5 +1,6 @@
 package com.mnvpatni.teamsync.volunteer
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.google.firebase.auth.FirebaseAuth
 import com.mnvpatni.teamsync.R
 import com.mnvpatni.teamsync.databinding.ActivityVolunteerDashboardBinding
+import com.mnvpatni.teamsync.scanner.FoodScannerActivity
 import com.mnvpatni.teamsync.sharedPrefs.AuthSharedPref
 
 class VolunteerDashboard : AppCompatActivity() {
@@ -39,7 +41,9 @@ class VolunteerDashboard : AppCompatActivity() {
             .transform(CircleCrop())
             .into(binding.ivProfilePic)
 
-        //
+        binding.ivProfilePic.setOnClickListener{
+            startActivity(Intent(this,FoodScannerActivity::class.java))
+        }
 
     }
 }

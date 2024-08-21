@@ -86,4 +86,8 @@ dependencies {
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     implementation("androidx.camera:camera-view:${camerax_version}")
 
+    //google ml kit
+    //barcode and qr scanner
+    implementation("com.google.mlkit:barcode-scanning:17.3.0")
+
 }

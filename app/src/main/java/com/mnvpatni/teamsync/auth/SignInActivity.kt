@@ -143,7 +143,7 @@ class SignInActivity : AppCompatActivity() {
 
     private fun navigateToDashboard() {
         val targetActivity = when (userType) {
-            "Admin" -> AdminDashboard::class.java
+            "Admin" -> VolunteerDashboard::class.java
             else -> VolunteerDashboard::class.java
         }
         exit(targetActivity)
