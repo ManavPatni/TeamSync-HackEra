@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mnvpatni.teamsync.R
 import com.mnvpatni.teamsync.databinding.ActivityVolunteerDashboardBinding
 import com.mnvpatni.teamsync.scanner.FoodScannerActivity
+import com.mnvpatni.teamsync.scanner.RestRoomScannerActivity
 import com.mnvpatni.teamsync.sharedPrefs.AuthSharedPref
 
 class VolunteerDashboard : AppCompatActivity() {
@@ -45,5 +46,7 @@ class VolunteerDashboard : AppCompatActivity() {
             startActivity(Intent(this,FoodScannerActivity::class.java))
         }
 
+        binding.tvUsername.setOnClickListener {
+            startActivity(Intent(this,RestRoomScannerActivity::class.java))  }
     }
 }

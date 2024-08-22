@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.pm.PackageManager
-import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -21,20 +20,21 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import com.mnvpatni.teamsync.adapter.TeamMealAdapter
+import com.mnvpatni.teamsync.adapter.TeamRestRoomAdapter
 import com.mnvpatni.teamsync.databinding.ActivityScannerBinding
 import com.mnvpatni.teamsync.network.RetrofitInstance
+import com.mnvpatni.teamsync.scanner.RestRoomScannerActivity.Companion.REQUIRED_PERMISSIONS
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
-class FoodScannerActivity : AppCompatActivity() {
+class RestRoomScannerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityScannerBinding
-    private lateinit var participantAdapter: TeamMealAdapter
+    private lateinit var participantAdapter: TeamRestRoomAdapter
     private lateinit var progressDialog: ProgressDialog
     private var analysisUseCase: ImageAnalysis? = null
     private var lastCapturedBarcode: String? = null
@@ -68,7 +68,7 @@ class FoodScannerActivity : AppCompatActivity() {
         }
 
         // Initialize adapter with an empty list
-        participantAdapter = TeamMealAdapter()
+        participantAdapter = TeamRestRoomAdapter()
         binding.rvTeamMembers.adapter = participantAdapter
         binding.rvTeamMembers.layoutManager = LinearLayoutManager(this)
 
@@ -86,7 +86,7 @@ class FoodScannerActivity : AppCompatActivity() {
         progressDialog.show()
         lifecycleScope.launch {
             try {
-                val response = RetrofitInstance.api.getTeamMealStatus(teamUID, "2024-08-30", "dinner")
+                val response = RetrofitInstance.api.getTeamRestRoomStatus(teamUID)
 
                 if (response.statusCode == 200) {
                     val participants = response.body
@@ -97,7 +97,7 @@ class FoodScannerActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error fetching data: ${e.localizedMessage}", e)
-                Toast.makeText(this@FoodScannerActivity, "An unexpected error occurred: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@RestRoomScannerActivity, "An unexpected error occurred: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             } finally {
                 progressDialog.dismiss()
             }
@@ -193,11 +193,12 @@ class FoodScannerActivity : AppCompatActivity() {
 
     companion object {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-        private const val TAG = "FoodScannerActivity"
+        private const val TAG = "RestRoomScannerActivity"
 
         // Check if all required permissions are granted
         fun hasPermissions(context: Context) = REQUIRED_PERMISSIONS.all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
     }
+
 }
