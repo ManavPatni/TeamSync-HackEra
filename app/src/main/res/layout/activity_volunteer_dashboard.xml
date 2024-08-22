@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/primaryBg"
     tools:context=".volunteer.VolunteerDashboard">
 
     <LinearLayout
@@ -20,7 +20,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="#192538">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_menu"
@@ -46,7 +47,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text="Username"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/primaryText"
                     android:textSize="@dimen/_12ssp" />
 
                 <TextView
@@ -57,7 +58,6 @@
                     android:fontFamily="@font/poppins"
                     android:text="post"
                     android:layout_below="@+id/tv_username"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />
 
                 <ImageView
@@ -87,7 +87,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/_8sdp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/primaryText"/>
 
             <TextView
                 android:id="@+id/tv_sortBy"
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sort_by"
                 android:fontFamily="@font/poppins_light"
-                android:textColor="@color/black"
+                android:textColor="@color/primaryText"
                 android:layout_centerVertical="true"
                 android:textSize="@dimen/_11ssp"
                 android:layout_alignParentEnd="true"

@@ -39,61 +39,103 @@
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/ll_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/tv_appSlogan"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_appBar">
 
-        <!--Country picker-->
-        <com.hbb20.CountryCodePicker
-            android:id="@+id/countryPicker"
-            android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_35sdp"
-            android:background="@drawable/edittext_background"
-            app:ccp_autoDetectCountry="true"
-            android:gravity="center_vertical"
-            app:ccp_defaultNameCode="IND"
-            app:ccp_showFlag="true"
-            app:ccp_showPhoneCode="true"
-            app:ccp_textSize="@dimen/_12ssp"
-            android:layout_gravity="center_vertical"/>
-
-        <!--Phone number-->
-        <EditText
-            android:id="@+id/etPhoneNumber"
-            android:layout_width="@dimen/_140sdp"
-            android:layout_height="@dimen/_35sdp"
-            android:background="@drawable/edittext_background"
-            android:hint="Enter phone number"
-            android:inputType="phone"
-            android:textColor="@color/secondaryText"
-            android:textColorHint="@color/secondaryText"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_googleAdmin"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:background="@drawable/google_outline_button"
+            android:drawableStart="@drawable/ic_google"
             android:paddingStart="@dimen/_10sdp"
             android:paddingEnd="@dimen/_10sdp"
-            android:textSize="@dimen/_12ssp"
-            android:layout_marginStart="@dimen/_5sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/countryPicker"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="@color/black"
+            android:text="@string/continue_as_admin"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:fontFamily="@font/poppins"
+            android:text="@string/or"
+            android:textSize="@dimen/_11ssp" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_verify"
-            android:layout_width="@dimen/_240sdp"
+            android:id="@+id/btn_googleVolunteer"
+            android:layout_width="@dimen/_200sdp"
             android:layout_height="@dimen/_40sdp"
-            android:background="@drawable/custom_google_button"
-            android:text="Verify"
-            android:textAllCaps="false"
+            android:background="@drawable/google_outline_button"
+            android:drawableStart="@drawable/ic_google"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingEnd="@dimen/_10sdp"
             android:textColor="@color/black"
-            android:fontFamily="@font/poppins_semibold"
-            android:textSize="@dimen/_12sdp"/>
+            android:text="@string/continue_as_volunteer"
+            android:textAllCaps="false" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_waitingForApproval"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/tv_appSlogan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_appBar">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lottie_rawRes="@raw/anim_waiting"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/waiting_for_approval"
+            android:textColor="@color/primaryText"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="@dimen/_14ssp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="@dimen/_250sdp"
+            android:layout_height="wrap_content"
+            android:text="@string/waiting_for_approval_msg"
+            android:textColor="@color/primaryText"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="@dimen/_13ssp"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_10sdp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_checkStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check status"
+            android:textAllCaps="false"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/poppins_semibold"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_appSlogan"

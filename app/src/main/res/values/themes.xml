@@ -10,5 +10,4 @@
         <item name="android:windowSharedElementExitTransition">@transition/shared_transition</item>
 
     </style>
-
 </resources>

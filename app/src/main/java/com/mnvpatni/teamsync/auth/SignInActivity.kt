@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +15,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.mnvpatni.teamsync.R
@@ -32,18 +32,13 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var pd: ProgressDialog
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
-    private var userType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initAuth()
-        initUI()
-    }
-
-    private fun initAuth() {
+        //Auth
         authSharedPref = AuthSharedPref(this)
         auth = FirebaseAuth.getInstance()
 
@@ -57,22 +52,37 @@ class SignInActivity : AppCompatActivity() {
             setMessage("Please wait..")
             setCancelable(false)
         }
-    }
 
-    private fun initUI() {
+        if (!authSharedPref.isSignedIn()) {
+            // First time login, show login buttons
+            binding.llButtons.visibility = View.VISIBLE
+            binding.llWaitingForApproval.visibility = View.GONE
+        } else {
+            // If user is signed in, always check with the server to verify status
+            binding.llButtons.visibility = View.GONE
+            binding.llWaitingForApproval.visibility = View.VISIBLE
+        }
+
+        //buttons
         binding.btnGoogleAdmin.setOnClickListener {
-            userType = "Admin"
+            authSharedPref.setUserType("Admin")
             signIn()
         }
 
         binding.btnGoogleVolunteer.setOnClickListener {
-            userType = "Volunteer"
+            authSharedPref.setUserType("Volunteer")
             signIn()
         }
+
+        binding.btnCheckStatus.setOnClickListener {
+            verifyMember(auth.currentUser!!.uid)
+        }
+
     }
 
     private fun signIn() {
         if (authSharedPref.isSignedIn()) {
+            // User is already signed in, verify immediately
             showWelcomeMessage()
             verifyMember(auth.uid!!)
         } else {
@@ -105,6 +115,7 @@ class SignInActivity : AppCompatActivity() {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
+                authSharedPref.setAuthStatus(true)
                 verifyMember(auth.uid!!)
             } else {
                 showToastError(it.exception.toString())
@@ -119,19 +130,33 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun showWelcomeMessage() {
-        Toast.makeText(this, "Welcome ${auth.currentUser?.displayName!!} 👋👋!!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Welcome ${auth.currentUser?.displayName!!} 👋👋!!", Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun verifyMember(uid: String) {
         pd.setMessage("Verifying account...")
+        pd.show()
+
         lifecycleScope.launch {
             try {
-                val response = RetrofitInstance.api.verifyCommitteeMember(uid, userType!!)
-                authSharedPref.setUserPost(response.post)
-                authSharedPref.setAccessTo(response.access_to)
-                showWelcomeMessage()
-                saveAuthStatus()
-                navigateToDashboard()
+                val response = RetrofitInstance.api.verifyCommitteeMember(
+                    uid = uid,
+                    name = auth.currentUser?.displayName.toString(),
+                    userType = authSharedPref.userType().toString()
+                )
+
+                if (response.status == 1) {  // Status 1 means approved
+                    authSharedPref.setUserPost(response.post)
+                    authSharedPref.setAccessTo(response.access_to)
+                    saveAuthStatus()
+                    navigateToDashboard()
+                } else {
+                    // Status 0 means awaiting approval, stay on the waiting screen
+                    binding.llButtons.visibility = View.GONE
+                    binding.llWaitingForApproval.visibility = View.VISIBLE
+                    Toast.makeText(this@SignInActivity, "Please wait for approval.", Toast.LENGTH_SHORT).show()
+                }
             } catch (e: Exception) {
                 Log.d("Api error", e.message.toString())
                 Toast.makeText(this@SignInActivity, "An unexpected error occurred!!", Toast.LENGTH_SHORT).show()
@@ -142,8 +167,8 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun navigateToDashboard() {
-        val targetActivity = when (userType) {
-            "Admin" -> VolunteerDashboard::class.java
+        val targetActivity = when (authSharedPref.userType()) {
+            "Admin" -> AdminDashboard::class.java
             else -> VolunteerDashboard::class.java
         }
         exit(targetActivity)
@@ -162,3 +187,4 @@ class SignInActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
+

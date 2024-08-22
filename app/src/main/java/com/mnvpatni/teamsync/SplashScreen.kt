@@ -31,11 +31,7 @@ class SplashScreen : AppCompatActivity() {
         setContentView(binding.root)
         authSharedPref = AuthSharedPref(this)
 
-        if (!authSharedPref.isSignedIn()) {
-            Timer().schedule(timerTask {
-                runOnUiThread { exitWithAnim() }
-            }, splashTimeOut)
-        } else {
+        if (authSharedPref.isSignedIn() && authSharedPref.userPost() != null) {
             Timer().schedule(timerTask {
                 val activityClass = if (authSharedPref.userType() == "Admin") {
                     AdminDashboard::class.java
@@ -43,6 +39,10 @@ class SplashScreen : AppCompatActivity() {
                     VolunteerDashboard::class.java
                 }
                 exit(activityClass)
+            }, splashTimeOut)
+        } else {
+            Timer().schedule(timerTask {
+                runOnUiThread { exitWithAnim() }
             }, splashTimeOut)
         }
     }

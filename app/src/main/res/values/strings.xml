@@ -7,6 +7,8 @@
     <string name="continue_as_admin">Continue As Admin</string>
     <string name="or">Or</string>
     <string name="continue_as_volunteer">Continue As Volunteer</string>
+    <string name="waiting_for_approval">Waiting for approval from admins..</string>
+    <string name="waiting_for_approval_msg">Please wait till admins verify and approve your account. This may take few hours..</string>
 
     <!--Volunteer Dashboard-->
     <string name="teams">Teams</string>
