@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/primaryBg"
     tools:context=".SplashScreen">
 
     <ImageView
@@ -27,7 +27,7 @@
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/app_name"
-        android:textColor="@color/black"
+        android:textColor="@color/primaryText"
         android:textSize="@dimen/_16ssp"
         android:transitionName="app_name"
         app:layout_constraintEnd_toEndOf="@+id/iv_logo"

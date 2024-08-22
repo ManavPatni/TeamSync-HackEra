@@ -1,7 +1,7 @@
 <resources>
-    <style name="Theme.TeamSync" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.TeamSync" parent="Theme.Material3.Dark.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primaryBg</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
 

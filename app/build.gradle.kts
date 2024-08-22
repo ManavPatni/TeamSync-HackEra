@@ -90,4 +90,7 @@ dependencies {
     //barcode and qr scanner
     implementation("com.google.mlkit:barcode-scanning:17.3.0")
 
+    //country picker
+    implementation("com.hbb20:ccp:2.7.3")
+
 }
