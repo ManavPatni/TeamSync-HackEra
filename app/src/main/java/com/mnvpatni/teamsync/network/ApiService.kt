@@ -3,6 +3,8 @@ package com.mnvpatni.teamsync.network
 import com.mnvpatni.teamsync.models.CommitteeMembersModel
 import com.mnvpatni.teamsync.models.MealResponse
 import com.mnvpatni.teamsync.models.RestRoomResponse
+import com.mnvpatni.teamsync.models.TeamModel
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -30,5 +32,8 @@ interface ApiService {
     suspend fun getTeamRestRoomStatus(
         @Query("team_uid") teamUID: String
     ): RestRoomResponse
+
+    @GET("team/get")
+    suspend fun getTeams(): Response<TeamModel>
 
 }

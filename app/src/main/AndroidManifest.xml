@@ -19,10 +19,16 @@
         android:theme="@style/Theme.TeamSync"
         tools:targetApi="31">
         <activity
+            android:name=".TeamDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".TeamInfoActivity"
             android:exported="false" />
         <activity
             android:name=".scanner.FoodScannerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".scanner.RestRoomScannerActivity"
             android:exported="false" />
         <activity
             android:name=".volunteer.VolunteerDashboard"

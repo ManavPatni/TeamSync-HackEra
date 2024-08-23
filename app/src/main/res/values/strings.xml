@@ -13,6 +13,15 @@
     <!--Volunteer Dashboard-->
     <string name="teams">Teams</string>
     <string name="sort_by">Sort By</string>
+    <string name="call_leader">Call Leader</string>
+    <string name="email_leader">Email Leader</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
+    <string name="home">Home</string>
+    <string name="meal_scanner">Meal Scanner</string>
+    <string name="rest_scanner">Rest Room Scanner</string>
+    <string name="permitted_zones">Permitted Zones</string>
 
     <!--Scanner Activity-->
     <string name="scanner">Scanner</string>
@@ -22,9 +31,9 @@
     <string name="update">Update</string>
 
     <string-array name="day_list">
-        <item>Day-1</item>
-        <item>Day-2</item>
-        <item>Day-3</item>
+        <item>2024-08-30</item>
+        <item>2024-08-31</item>
+        <item>2024-09-01</item>
     </string-array>
 
     <string-array name="food_list">

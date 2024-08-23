@@ -138,7 +138,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/outline_box"
-                    android:entries="@array/day_list"
+                    android:entries="@array/food_list"
                     android:padding="@dimen/_5sdp"
                     android:spinnerMode="dialog"
                     app:layout_constraintBottom_toBottomOf="@id/tv_teamName"

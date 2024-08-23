@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
@@ -23,11 +24,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import com.mnvpatni.teamsync.adapter.TeamMealAdapter
 import com.mnvpatni.teamsync.adapter.TeamRestRoomAdapter
 import com.mnvpatni.teamsync.databinding.ActivityScannerBinding
 import com.mnvpatni.teamsync.network.RetrofitInstance
-import com.mnvpatni.teamsync.scanner.RestRoomScannerActivity.Companion.REQUIRED_PERMISSIONS
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
@@ -58,6 +57,14 @@ class RestRoomScannerActivity : AppCompatActivity() {
         progressDialog = ProgressDialog(this).apply {
             setMessage("Please wait...")
             setCancelable(false)
+        }
+
+        binding.btnBack.text = "Rest Room Scanner"
+        binding.spinnerDay.visibility = View.GONE
+        binding.spinnerFood.visibility = View.GONE
+
+        binding.btnBack.setOnClickListener {
+            finish()
         }
 
         // Request camera permissions

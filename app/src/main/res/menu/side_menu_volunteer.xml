@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
+
+    <item
+        android:id="@+id/nav_mealScanner"
+        android:icon="@drawable/ic_scanner"
+        android:title="@string/meal_scanner" />
+
+    <item
+        android:id="@+id/nav_restRoomScanner"
+        android:icon="@drawable/ic_scanner"
+        android:title="@string/rest_scanner" />
+
+    <item
+        android:id="@+id/nav_permittedZone"
+        android:icon="@drawable/ic_pin"
+        android:title="@string/permitted_zones" />
+
+</menu>

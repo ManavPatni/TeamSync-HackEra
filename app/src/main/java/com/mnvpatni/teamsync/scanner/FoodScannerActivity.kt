@@ -60,6 +60,11 @@ class FoodScannerActivity : AppCompatActivity() {
             setCancelable(false)
         }
 
+        binding.btnBack.text = "Meal Scanner"
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         // Request camera permissions
         if (hasPermissions(this)) {
             startCamera()
@@ -84,9 +89,11 @@ class FoodScannerActivity : AppCompatActivity() {
 
     private fun getDetails(teamUID: String) {
         progressDialog.show()
+        val selectedDay = binding.spinnerDay.selectedItem.toString()
+        val selectedFood = binding.spinnerFood.selectedItem.toString()
         lifecycleScope.launch {
             try {
-                val response = RetrofitInstance.api.getTeamMealStatus(teamUID, "2024-08-30", "dinner")
+                val response = RetrofitInstance.api.getTeamMealStatus(teamUID, selectedDay, selectedFood)
 
                 if (response.statusCode == 200) {
                     val participants = response.body
