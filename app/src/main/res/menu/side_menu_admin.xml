@@ -13,6 +13,21 @@
         android:icon="@drawable/ic_pin"
         android:title="@string/permitted_zones" />
 
+    <item android:title="Manage">
+        <menu>
+            <item
+                android:id="@+id/nav_manageCommittee"
+                android:icon="@drawable/ic_committee"
+                android:title="@string/committee" />
+
+            <item
+                android:id="@+id/nav_manageTeam"
+                android:icon="@drawable/ic_team_2"
+                android:title="@string/teams" />
+
+        </menu>
+    </item>
+
     <item android:title="Scanner">
         <menu>
             <item
@@ -26,6 +41,5 @@
                 android:title="@string/rest_scanner" />
         </menu>
     </item>
-
 
 </menu>

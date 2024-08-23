@@ -120,6 +120,10 @@ class RestRoomScannerActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateStatus() {
+
+    }
+
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 

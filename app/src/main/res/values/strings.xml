@@ -19,9 +19,10 @@
     <string name="nav_close">Close</string>
 
     <string name="home">Home</string>
-    <string name="meal_scanner">Meal Scanner</string>
-    <string name="rest_scanner">Rest Room Scanner</string>
+    <string name="meal_scanner">Meal</string>
+    <string name="rest_scanner">Rest Room</string>
     <string name="permitted_zones">Permitted Zones</string>
+    <string name="committee">Committee</string>
 
     <!--Scanner Activity-->
     <string name="scanner">Scanner</string>

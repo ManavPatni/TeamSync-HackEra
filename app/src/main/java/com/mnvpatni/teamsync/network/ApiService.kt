@@ -33,7 +33,16 @@ interface ApiService {
         @Query("team_uid") teamUID: String
     ): RestRoomResponse
 
+    //get team info
     @GET("team/get")
     suspend fun getTeams(): Response<TeamModel>
+
+    //update rest room details
+    /*@POST("rest-room/update")
+    suspend fun updateRestRoomDetails(
+        @Query("team_id") teamID: String,
+        @Query("participant_name") participantName: String,
+        @Query("is_in_restroom") isInRestroom: Int,
+    ):*/
 
 }
