@@ -38,6 +38,9 @@ class RestRoomScannerActivity : AppCompatActivity() {
     private var analysisUseCase: ImageAnalysis? = null
     private var lastCapturedBarcode: String? = null
 
+    private var lastApiCallTime: Long = 0
+    private val API_CALL_DELAY_MS = 2000 // 2 seconds
+
     // Permission request launcher
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -90,6 +93,12 @@ class RestRoomScannerActivity : AppCompatActivity() {
     }
 
     private fun getDetails(teamUID: String) {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastApiCallTime < API_CALL_DELAY_MS) {
+            return // Avoid calling the API if the last call was too recent
+        }
+
+        lastApiCallTime = currentTime
         progressDialog.show()
         lifecycleScope.launch {
             try {
@@ -186,6 +195,7 @@ class RestRoomScannerActivity : AppCompatActivity() {
                     if (value != null && value != lastCapturedBarcode) {
                         lastCapturedBarcode = value
                         binding.etTeamUid.setText(value)
+                        // Call getDetails() method only if the QR code is new
                         getDetails(value)
                     }
                 }
@@ -194,9 +204,11 @@ class RestRoomScannerActivity : AppCompatActivity() {
                 Log.e(TAG, "Barcode processing failed: ${it.message}")
             }
             .addOnCompleteListener {
+                // Ensure that the imageProxy is closed after processing
                 imageProxy.close()
             }
     }
+
 
     companion object {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
