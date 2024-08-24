@@ -39,6 +39,9 @@ class FoodScannerActivity : AppCompatActivity() {
     private var analysisUseCase: ImageAnalysis? = null
     private var lastCapturedBarcode: String? = null
 
+    private var lastApiCallTime: Long = 0
+    private val API_CALL_DELAY_MS = 2000 // 2 seconds
+
     // Permission request launcher
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -88,6 +91,12 @@ class FoodScannerActivity : AppCompatActivity() {
     }
 
     private fun getDetails(teamUID: String) {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastApiCallTime < API_CALL_DELAY_MS) {
+            return // Avoid calling the API if the last call was too recent
+        }
+
+        lastApiCallTime = currentTime
         progressDialog.show()
         val selectedDay = binding.spinnerDay.selectedItem.toString()
         val selectedFood = binding.spinnerFood.selectedItem.toString()
@@ -186,6 +195,7 @@ class FoodScannerActivity : AppCompatActivity() {
                     if (value != null && value != lastCapturedBarcode) {
                         lastCapturedBarcode = value
                         binding.etTeamUid.setText(value)
+                        // Call getDetails() method only if the QR code is new
                         getDetails(value)
                     }
                 }
@@ -194,6 +204,7 @@ class FoodScannerActivity : AppCompatActivity() {
                 Log.e(TAG, "Barcode processing failed: ${it.message}")
             }
             .addOnCompleteListener {
+                // Ensure that the imageProxy is closed after processing
                 imageProxy.close()
             }
     }
