@@ -90,6 +90,11 @@ class RestRoomScannerActivity : AppCompatActivity() {
                 Snackbar.make(binding.main, "Enter team UID.", Snackbar.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnUpdate.setOnClickListener {
+            updateStatus()
+        }
+
     }
 
     private fun getDetails(teamUID: String) {
@@ -121,7 +126,24 @@ class RestRoomScannerActivity : AppCompatActivity() {
     }
 
     private fun updateStatus() {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitInstance.api.updateRestRoomDetails(teamUID)
 
+                if (response.statusCode == 200) {
+                    val participants = response.body
+                    binding.tvTeamName.text = participants.team_name
+                    participantAdapter.updateData(participants.details)
+                } else {
+                    Snackbar.make(binding.root, "Failed to fetch data: ${response.statusCode}", Snackbar.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error fetching data: ${e.localizedMessage}", e)
+                Toast.makeText(this@RestRoomScannerActivity, "An unexpected error occurred: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            } finally {
+                progressDialog.dismiss()
+            }
+        }
     }
 
     private fun startCamera() {

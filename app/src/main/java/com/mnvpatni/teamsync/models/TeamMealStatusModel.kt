@@ -18,5 +18,5 @@ data class MealTeamMember(
     val gender: String,
     val age: Int,
     val role: String,
-    val attended: Int
+    var attended: Int
 )

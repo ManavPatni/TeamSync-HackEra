@@ -1,11 +1,13 @@
 package com.mnvpatni.teamsync.network
 
 import com.mnvpatni.teamsync.models.CommitteeMembersModel
-import com.mnvpatni.teamsync.models.MealAttendanceApiResponse
-import com.mnvpatni.teamsync.models.MealAttendanceRequest
 import com.mnvpatni.teamsync.models.MealResponse
+import com.mnvpatni.teamsync.models.MealUpdateRequest
 import com.mnvpatni.teamsync.models.RestRoomResponse
 import com.mnvpatni.teamsync.models.TeamModel
+import com.mnvpatni.teamsync.models.UpdateResponse
+import com.mnvpatni.teamsync.models.UpdateRestRoomResponse
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -31,16 +33,22 @@ interface ApiService {
     ): MealResponse
 
     //Update meal info
-    @POST("your-endpoint-path")
-    suspend fun updateMealAttendance(
-        @Body request: MealAttendanceRequest
-    ): Response<MealAttendanceApiResponse>
+    @POST("meals/update")
+    fun updateMealRecords(@Body requestBody: MealUpdateRequest): Call<UpdateResponse>
 
     //rest room info
     @GET("rest-room/get")
     suspend fun getTeamRestRoomStatus(
         @Query("team_uid") teamUID: String
     ): RestRoomResponse
+
+    //update rest room info
+    @POST("rest-room/update")
+    suspend fun updateRestRoomDetails(
+        @Query("team_id") teamID: String,
+        @Query("participant_name") participantName: String,
+        @Query("is_in_restroom") isInRestroom: Int,
+    ): UpdateRestRoomResponse
 
     //get team info
     @GET("team/get")

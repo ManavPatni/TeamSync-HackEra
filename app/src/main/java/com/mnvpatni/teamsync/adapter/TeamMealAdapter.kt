@@ -25,10 +25,17 @@ class TeamMealAdapter(private var participants: MutableList<MealTeamMember> = mu
             nameTextView.text = participant.name
             genderAgeTextView.text = "${participant.gender} - ${participant.age}"
             attendedCheckBox.isChecked = participant.attended == 1
+
+            // Set listener to update participant's attended status
+            attendedCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                participants[position] = participant.copy(attended = if (isChecked) 1 else 0)
+            }
         }
     }
 
     override fun getItemCount(): Int = participants.size
+
+    fun getParticipants(): List<MealTeamMember> = participants
 
     class ParticipantViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val memberNumTextView: TextView = itemView.findViewById(R.id.tv_memberNumber)

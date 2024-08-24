@@ -92,5 +92,6 @@ dependencies {
 
     //country picker
     implementation("com.hbb20:ccp:2.7.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
 
 }

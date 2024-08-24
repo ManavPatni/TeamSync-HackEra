@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.pm.PackageManager
-import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -21,14 +20,20 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.google.mlkit.vision.barcode.BarcodeScanner
+import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import com.mnvpatni.teamsync.adapter.TeamMealAdapter
 import com.mnvpatni.teamsync.databinding.ActivityScannerBinding
+import com.mnvpatni.teamsync.models.MealUpdateRequest
+import com.mnvpatni.teamsync.models.Participant
+import com.mnvpatni.teamsync.models.UpdateResponse
 import com.mnvpatni.teamsync.network.RetrofitInstance
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.concurrent.Executors
 
 class FoodScannerActivity : AppCompatActivity() {
@@ -88,6 +93,10 @@ class FoodScannerActivity : AppCompatActivity() {
                 Snackbar.make(binding.main, "Enter team UID.", Snackbar.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnUpdate.setOnClickListener {
+            updateMealRecords()
+        }
     }
 
     private fun getDetails(teamUID: String) {
@@ -118,6 +127,59 @@ class FoodScannerActivity : AppCompatActivity() {
                 progressDialog.dismiss()
             }
         }
+    }
+
+    private fun updateMealRecords() {
+        val teamUid = binding.etTeamUid.text.toString()
+        val selectedDate = binding.spinnerDay.selectedItem.toString()
+        val selectedMealType = binding.spinnerFood.selectedItem.toString()
+
+        val participantsFromAdapter = participantAdapter.getParticipants()
+
+        // Map the participants to the required format
+        val participantList = participantsFromAdapter.map { participant ->
+            Participant(name = participant.name, attended = participant.attended)
+        }
+
+        val requestBody = MealUpdateRequest(
+            team_uid = teamUid,
+            date = selectedDate,
+            meal_type = selectedMealType,
+            participants = participantList
+        )
+
+        // Log the request payload before sending it
+        Log.d(TAG, "Request Payload: ${Gson().toJson(requestBody)}")
+
+        RetrofitInstance.api.updateMealRecords(requestBody).enqueue(object : Callback<UpdateResponse> {
+            override fun onResponse(call: Call<UpdateResponse>, response: Response<UpdateResponse>) {
+                if (response.isSuccessful) {
+                    val updateResponse = response.body()
+                    val message = updateResponse?.body
+                    if (!message.isNullOrEmpty()) {
+                        Toast.makeText(this@FoodScannerActivity, message, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@FoodScannerActivity, "Update successful, but no message was returned.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@FoodScannerActivity, "Update failed with status code: ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
+                Log.d(TAG, "API Response: ${response.body()}")
+                Log.d(TAG, "Request Body: $requestBody")
+                val gson = Gson()
+                val jsonRequestBody = gson.toJson(requestBody)
+                Log.d("FoodScannerActivity", "Serialized JSON Request Body: $jsonRequestBody")
+                Log.d(TAG, "API Response - UID: ${teamUid}")
+                Log.d(TAG, "API Response - selectedDay: ${selectedDate}")
+                Log.d(TAG, "API Response - selectedFood: ${selectedMealType}")
+                Log.d(TAG, "API Response - participantList: ${participantList}")
+            }
+
+            override fun onFailure(call: Call<UpdateResponse>, t: Throwable) {
+                Log.e(TAG, "Error updating meal records: ${t.message}", t)
+                Toast.makeText(this@FoodScannerActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun startCamera() {
