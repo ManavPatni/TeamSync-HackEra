@@ -148,9 +148,6 @@ class FoodScannerActivity : AppCompatActivity() {
             participants = participantList
         )
 
-        // Log the request payload before sending it
-        Log.d(TAG, "Request Payload: ${Gson().toJson(requestBody)}")
-
         RetrofitInstance.api.updateMealRecords(requestBody).enqueue(object : Callback<UpdateResponse> {
             override fun onResponse(call: Call<UpdateResponse>, response: Response<UpdateResponse>) {
                 if (response.isSuccessful) {
@@ -164,15 +161,6 @@ class FoodScannerActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this@FoodScannerActivity, "Update failed with status code: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
-                Log.d(TAG, "API Response: ${response.body()}")
-                Log.d(TAG, "Request Body: $requestBody")
-                val gson = Gson()
-                val jsonRequestBody = gson.toJson(requestBody)
-                Log.d("FoodScannerActivity", "Serialized JSON Request Body: $jsonRequestBody")
-                Log.d(TAG, "API Response - UID: ${teamUid}")
-                Log.d(TAG, "API Response - selectedDay: ${selectedDate}")
-                Log.d(TAG, "API Response - selectedFood: ${selectedMealType}")
-                Log.d(TAG, "API Response - participantList: ${participantList}")
             }
 
             override fun onFailure(call: Call<UpdateResponse>, t: Throwable) {
@@ -226,17 +214,6 @@ class FoodScannerActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-    private fun setupMlKit() {
-        val options = BarcodeScannerOptions.Builder()
-            .enableAllPotentialBarcodes()
-            .build()
-        val scanner = BarcodeScanning.getClient(options)
-        analysisUseCase?.setAnalyzer(
-            Executors.newSingleThreadExecutor()
-        ) { imageProxy ->
-            processImageProxy(imageProxy)
-        }
-    }
 
     @OptIn(ExperimentalGetImage::class)
     private fun processImageProxy(imageProxy: ImageProxy) {

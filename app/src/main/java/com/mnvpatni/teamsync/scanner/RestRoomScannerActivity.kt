@@ -4,12 +4,16 @@ import android.Manifest
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
@@ -20,14 +24,21 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import com.mnvpatni.teamsync.adapter.TeamRestRoomAdapter
 import com.mnvpatni.teamsync.databinding.ActivityScannerBinding
+import com.mnvpatni.teamsync.models.Participant
+import com.mnvpatni.teamsync.models.RestRoomParticipant
+import com.mnvpatni.teamsync.models.UpdateRestRoomRequest
+import com.mnvpatni.teamsync.models.UpdateRestRoomResponse
 import com.mnvpatni.teamsync.network.RetrofitInstance
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.concurrent.Executors
 
 class RestRoomScannerActivity : AppCompatActivity() {
@@ -39,16 +50,14 @@ class RestRoomScannerActivity : AppCompatActivity() {
     private var lastCapturedBarcode: String? = null
 
     private var lastApiCallTime: Long = 0
-    private val API_CALL_DELAY_MS = 2000 // 2 seconds
+    private val apiCallDelayMs = 2000 // 2 seconds
 
-    // Permission request launcher
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val allPermissionsGranted = REQUIRED_PERMISSIONS.all { permissions[it] == true }
-            if (allPermissionsGranted) {
+            if (permissions.all { it.value }) {
                 startCamera()
             } else {
-                Snackbar.make(binding.root, "Permission denied", Snackbar.LENGTH_SHORT).show()
+                showSnackbar("Permission denied")
             }
         }
 
@@ -57,149 +66,154 @@ class RestRoomScannerActivity : AppCompatActivity() {
         binding = ActivityScannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        progressDialog = ProgressDialog(this).apply {
-            setMessage("Please wait...")
-            setCancelable(false)
+        setupUI()
+        setupCameraPermissions()
+    }
+
+    private fun setupUI() {
+        progressDialog = createProgressDialog()
+        binding.apply {
+            btnBack.text = "Rest Room Scanner"
+            spinnerDay.visibility = View.GONE
+            spinnerFood.visibility = View.GONE
+
+            btnBack.setOnClickListener { finish() }
+
+            participantAdapter = TeamRestRoomAdapter()
+            rvTeamMembers.apply {
+                adapter = participantAdapter
+                layoutManager = LinearLayoutManager(this@RestRoomScannerActivity)
+            }
+
+            btnForceSearch.setOnClickListener {
+                val teamUID = etTeamUid.text?.toString()
+                if (teamUID.isNullOrBlank()) {
+                    showSnackbar("Enter team UID.")
+                } else {
+                    getDetails(teamUID)
+                }
+            }
+
+            btnUpdate.setOnClickListener { handleUpdate() }
         }
+    }
 
-        binding.btnBack.text = "Rest Room Scanner"
-        binding.spinnerDay.visibility = View.GONE
-        binding.spinnerFood.visibility = View.GONE
-
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
-
-        // Request camera permissions
-        if (hasPermissions(this)) {
+    private fun setupCameraPermissions() {
+        if (hasPermissions()) {
             startCamera()
         } else {
             requestPermissionLauncher.launch(REQUIRED_PERMISSIONS)
         }
+    }
 
-        // Initialize adapter with an empty list
-        participantAdapter = TeamRestRoomAdapter()
-        binding.rvTeamMembers.adapter = participantAdapter
-        binding.rvTeamMembers.layoutManager = LinearLayoutManager(this)
-
-        binding.btnForceSearch.setOnClickListener {
-            val teamUID = binding.etTeamUid.text?.toString()
-            if (!teamUID.isNullOrBlank()) {
-                getDetails(teamUID)
-            } else {
-                Snackbar.make(binding.main, "Enter team UID.", Snackbar.LENGTH_SHORT).show()
-            }
+    private fun createProgressDialog(): ProgressDialog {
+        return ProgressDialog(this).apply {
+            setMessage("Please wait...")
+            setCancelable(false)
         }
-
-        binding.btnUpdate.setOnClickListener {
-            updateStatus()
-        }
-
     }
 
     private fun getDetails(teamUID: String) {
-        val currentTime = System.currentTimeMillis()
-        if (currentTime - lastApiCallTime < API_CALL_DELAY_MS) {
-            return // Avoid calling the API if the last call was too recent
-        }
+        if (System.currentTimeMillis() - lastApiCallTime < apiCallDelayMs) return
+        lastApiCallTime = System.currentTimeMillis()
 
-        lastApiCallTime = currentTime
         progressDialog.show()
         lifecycleScope.launch {
             try {
                 val response = RetrofitInstance.api.getTeamRestRoomStatus(teamUID)
-
                 if (response.statusCode == 200) {
-                    val participants = response.body
-                    binding.tvTeamName.text = participants.team_name
-                    participantAdapter.updateData(participants.details)
+                    response.body?.let { participants ->
+                        binding.tvTeamName.text = participants.team_name
+                        participantAdapter.updateData(participants.details)
+                    }
                 } else {
-                    Snackbar.make(binding.root, "Failed to fetch data: ${response.statusCode}", Snackbar.LENGTH_SHORT).show()
+                    showSnackbar("Failed to fetch data: ${response.statusCode}")
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error fetching data: ${e.localizedMessage}", e)
-                Toast.makeText(this@RestRoomScannerActivity, "An unexpected error occurred: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                showToast("An unexpected error occurred: ${e.localizedMessage}")
+                Log.e(TAG, "Error fetching data", e)
             } finally {
                 progressDialog.dismiss()
             }
         }
     }
 
-    private fun updateStatus() {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitInstance.api.updateRestRoomDetails(teamUID)
-
-                if (response.statusCode == 200) {
-                    val participants = response.body
-                    binding.tvTeamName.text = participants.team_name
-                    participantAdapter.updateData(participants.details)
-                } else {
-                    Snackbar.make(binding.root, "Failed to fetch data: ${response.statusCode}", Snackbar.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error fetching data: ${e.localizedMessage}", e)
-                Toast.makeText(this@RestRoomScannerActivity, "An unexpected error occurred: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-            } finally {
-                progressDialog.dismiss()
-            }
+    private fun handleUpdate() {
+        val participants = participantAdapter.getParticipants()
+        // Map the participants to the required format
+        val participantList = participants.map { participant ->
+            RestRoomParticipant(name = participant.name, isInRestRoom = participant.isInRestRoom)
         }
+
+        val totalParticipants = participants.size
+        val participantsInRestRoom = participants.count { it.isInRestRoom == 1 }
+
+        val percentageInRestRoom = (participantsInRestRoom.toDouble() / totalParticipants) * 100
+
+        if (percentageInRestRoom <= 50) {
+            updateStatus(participantList)
+        } else {
+            showWarningDialog(participantList)
+        }
+    }
+
+    private fun showWarningDialog(participants: List<RestRoomParticipant>) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            triggerWarningVibration()
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Warning")
+            .setMessage("More than 50% of participants are in the restroom. This may affect the team's progress in the hackathon. Do you want to continue?")
+            .setPositiveButton("Continue Anyways") { _, _ -> updateStatus(participants) }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun updateStatus(participants: List<RestRoomParticipant>) {
+        val teamUid = binding.etTeamUid.text.toString()
+
+        RetrofitInstance.api.updateRestRoomDetails(UpdateRestRoomRequest(team_uid = teamUid, participants = participants))
+            .enqueue(object : Callback<UpdateRestRoomResponse> {
+                override fun onResponse(call: Call<UpdateRestRoomResponse>, response: Response<UpdateRestRoomResponse>) {
+                    if (response.isSuccessful) {
+                        showToast(response.body()?.message ?: "Update successful, but no message was returned.")
+                    } else {
+                        showToast("Update failed with status code: ${response.code()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<UpdateRestRoomResponse>, t: Throwable) {
+                    showToast("Network error: ${t.message}")
+                    Log.e(TAG, "Error updating status", t)
+                }
+            })
     }
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
+            val previewUseCase = Preview.Builder().build().also {
+                it.setSurfaceProvider(binding.previewView.surfaceProvider)
+            }
 
-            // setting up the preview use case
-            val previewUseCase = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(binding.previewView.surfaceProvider)
-                }
-
-            // configure to use the back camera
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-            // setting up the image analysis use case
             analysisUseCase = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
-
-            analysisUseCase?.setAnalyzer(
-                Executors.newSingleThreadExecutor()
-            ) { imageProxy ->
-                processImageProxy(imageProxy)
-            }
+                .build().apply {
+                    setAnalyzer(Executors.newSingleThreadExecutor()) { imageProxy ->
+                        processImageProxy(imageProxy)
+                    }
+                }
 
             try {
-                cameraProvider.bindToLifecycle(
-                    this,
-                    cameraSelector,
-                    previewUseCase,
-                    analysisUseCase
-                )
-            } catch (illegalStateException: IllegalStateException) {
-                // If the use case has already been bound to another lifecycle or method is not called on main thread.
-                Log.e(TAG, illegalStateException.message.orEmpty())
-            } catch (illegalArgumentException: IllegalArgumentException) {
-                // If the provided camera selector is unable to resolve a camera to be used for the given use cases.
-                Log.e(TAG, illegalArgumentException.message.orEmpty())
+                cameraProvider.bindToLifecycle(this, cameraSelector, previewUseCase, analysisUseCase)
+            } catch (e: Exception) {
+                Log.e(TAG, "Camera binding error: ${e.message}", e)
             }
         }, ContextCompat.getMainExecutor(this))
-    }
-
-    private fun setupMlKit() {
-        val options = BarcodeScannerOptions.Builder()
-            .enableAllPotentialBarcodes()
-            .build()
-        val scanner = BarcodeScanning.getClient(options)
-        analysisUseCase?.setAnalyzer(
-            Executors.newSingleThreadExecutor()
-        ) { imageProxy ->
-            processImageProxy(imageProxy)
-        }
     }
 
     @OptIn(ExperimentalGetImage::class)
@@ -209,19 +223,13 @@ class RestRoomScannerActivity : AppCompatActivity() {
             return
         }
 
-        val inputImage = InputImage.fromMediaImage(
-            image, imageProxy.imageInfo.rotationDegrees
-        )
-
-        val scanner = BarcodeScanning.getClient()
-        scanner.process(inputImage)
+        val inputImage = InputImage.fromMediaImage(image, imageProxy.imageInfo.rotationDegrees)
+        BarcodeScanning.getClient().process(inputImage)
             .addOnSuccessListener { barcodes ->
-                for (barcode in barcodes) {
-                    val value = barcode.rawValue
-                    if (value != null && value != lastCapturedBarcode) {
+                barcodes.firstOrNull()?.rawValue?.let { value ->
+                    if (value != lastCapturedBarcode) {
                         lastCapturedBarcode = value
                         binding.etTeamUid.setText(value)
-                        // Call getDetails() method only if the QR code is new
                         getDetails(value)
                     }
                 }
@@ -230,20 +238,32 @@ class RestRoomScannerActivity : AppCompatActivity() {
                 Log.e(TAG, "Barcode processing failed: ${it.message}")
             }
             .addOnCompleteListener {
-                // Ensure that the imageProxy is closed after processing
                 imageProxy.close()
             }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun triggerWarningVibration() {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (vibrator.hasVibrator()) {
+            vibrator.vibrate(VibrationEffect.createOneShot(250, VibrationEffect.DEFAULT_AMPLITUDE))
+        }
+    }
+
+    private fun hasPermissions() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 
     companion object {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val TAG = "RestRoomScannerActivity"
-
-        // Check if all required permissions are granted
-        fun hasPermissions(context: Context) = REQUIRED_PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-        }
     }
-
 }

@@ -6,6 +6,7 @@ import com.mnvpatni.teamsync.models.MealUpdateRequest
 import com.mnvpatni.teamsync.models.RestRoomResponse
 import com.mnvpatni.teamsync.models.TeamModel
 import com.mnvpatni.teamsync.models.UpdateResponse
+import com.mnvpatni.teamsync.models.UpdateRestRoomRequest
 import com.mnvpatni.teamsync.models.UpdateRestRoomResponse
 import retrofit2.Call
 import retrofit2.Response
@@ -44,11 +45,7 @@ interface ApiService {
 
     //update rest room info
     @POST("rest-room/update")
-    suspend fun updateRestRoomDetails(
-        @Query("team_id") teamID: String,
-        @Query("participant_name") participantName: String,
-        @Query("is_in_restroom") isInRestroom: Int,
-    ): UpdateRestRoomResponse
+    fun updateRestRoomDetails(@Body requestBody: UpdateRestRoomRequest): Call<UpdateRestRoomResponse>
 
     //get team info
     @GET("team/get")
