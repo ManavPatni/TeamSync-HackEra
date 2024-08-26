@@ -5,6 +5,7 @@ import com.mnvpatni.teamsync.models.MealResponse
 import com.mnvpatni.teamsync.models.MealUpdateRequest
 import com.mnvpatni.teamsync.models.RestRoomResponse
 import com.mnvpatni.teamsync.models.TeamModel
+import com.mnvpatni.teamsync.models.UpdateAttendanceModel
 import com.mnvpatni.teamsync.models.UpdateResponse
 import com.mnvpatni.teamsync.models.UpdateRestRoomRequest
 import com.mnvpatni.teamsync.models.UpdateRestRoomResponse
@@ -50,5 +51,12 @@ interface ApiService {
     //get team info
     @GET("team/get")
     suspend fun getTeams(): Response<TeamModel>
+
+    //team attendance
+    @POST("team/attendance")
+    suspend fun setAttendance(
+        @Query("team_id") teamId: String,
+        @Query("call_from") callFrom: String
+    ): UpdateAttendanceModel
 
 }

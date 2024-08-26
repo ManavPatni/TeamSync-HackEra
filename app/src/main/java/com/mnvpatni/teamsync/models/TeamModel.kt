@@ -11,6 +11,7 @@ data class TeamModel(
 
 // Data class representing a team
 data class Team(
+    val team_id: String,            // Team Id
     val team_name: String,         // The name of the team
     val college: String,           // The college associated with the team
     val city: String,              // The city where the team is located

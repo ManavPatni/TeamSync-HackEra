@@ -55,7 +55,7 @@ dependencies {
 
     //Firebase
     //BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     //Analytics
     implementation("com.google.firebase:firebase-analytics")
     //Auth
@@ -92,6 +92,6 @@ dependencies {
 
     //country picker
     implementation("com.hbb20:ccp:2.7.3")
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.14")
 
 }

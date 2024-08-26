@@ -28,6 +28,7 @@ class TeamDetailAdapter(
             teamSize.text = "${team.members.size} members"
             itemView.setOnClickListener {
                 val intent = Intent(context, TeamDetailsActivity::class.java).apply {
+                    putExtra("uid", team.team_id)
                     putExtra("team_name", team.team_name)
                     putExtra("college", team.college)
                     putExtra("city", team.city)
