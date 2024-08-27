@@ -102,7 +102,7 @@
         app:layout_constraintTop_toBottomOf="@+id/til_accessTo" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_kit"
+        android:id="@+id/btn_update"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_40sdp"
         android:background="@drawable/google_outline_button"
