@@ -1,39 +1,26 @@
 package com.mnvpatni.teamsync.admin
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.mnvpatni.teamsync.R
-import com.mnvpatni.teamsync.adapter.TeamDetailAdapter
 import com.mnvpatni.teamsync.databinding.ActivityAdminDashboardBinding
-import com.mnvpatni.teamsync.databinding.ActivityVolunteerDashboardBinding
-import com.mnvpatni.teamsync.network.RetrofitInstance
 import com.mnvpatni.teamsync.scanner.FoodScannerActivity
 import com.mnvpatni.teamsync.scanner.RestRoomScannerActivity
 import com.mnvpatni.teamsync.sharedPrefs.AuthSharedPref
 import com.mnvpatni.teamsync.volunteer.VolunteerDashboard
-import kotlinx.coroutines.launch
 
 class AdminDashboard : AppCompatActivity() {
 
     //view binding
     private lateinit var binding: ActivityAdminDashboardBinding
-    private lateinit var participantAdapter: TeamDetailAdapter
 
     // Hamburger Menu
     private lateinit var toggle: ActionBarDrawerToggle
@@ -74,57 +61,36 @@ class AdminDashboard : AppCompatActivity() {
             .transform(CircleCrop())
             .into(binding.ivProfilePic)
 
-
-        participantAdapter = TeamDetailAdapter(context = this)
-        binding.rvTeams.adapter = participantAdapter
-        binding.rvTeams.layoutManager = LinearLayoutManager(this)
-
-        getTeams()
+        replaceFragment(AdminHomeFragment())
 
         //Hamburger menu item onclick listener
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.nav_home ->  startActivity(Intent(this, VolunteerDashboard::class.java))
-                R.id.nav_mealScanner ->  startActivity(
-                    Intent(this,
-                        FoodScannerActivity::class.java)
+                R.id.nav_home -> replaceFragment(AdminHomeFragment())
+                R.id.nav_manageCommittee -> replaceFragment(CommitteeMembersFragment())
+                R.id.nav_mealScanner -> startActivity(
+                    Intent(
+                        this,
+                        FoodScannerActivity::class.java
+                    )
                 )
-                R.id.nav_restRoomScanner ->  startActivity(
-                    Intent(this,
-                        RestRoomScannerActivity::class.java)
+
+                R.id.nav_restRoomScanner -> startActivity(
+                    Intent(
+                        this,
+                        RestRoomScannerActivity::class.java
+                    )
                 )
             }
             true
         }
     }
 
-    private fun getTeams() {
-        lifecycleScope.launch {
-            try {
-                // Call the API to get the teams
-                val response = RetrofitInstance.api.getTeams()
-
-                if (response.isSuccessful) {
-                    val apiResponse = response.body()
-                    if (apiResponse != null && apiResponse.statusCode == 200) {
-                        val teams = apiResponse.body
-                        if (teams.isNotEmpty()) {
-                            participantAdapter.updateData(teams)
-                            binding.rvTeams.adapter = participantAdapter
-                        } else {
-                            Snackbar.make(binding.root, "No teams found.", Snackbar.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        Snackbar.make(binding.root, "Failed to fetch data: ${response.code()}", Snackbar.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Snackbar.make(binding.root, "Request failed: ${response.code()}", Snackbar.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error fetching data: ${e.localizedMessage}", e)
-                Toast.makeText(this@AdminDashboard, "An unexpected error occurred: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-            }
-        }
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fl_adminMain, fragment)
+        fragmentTransaction.commit()
     }
 
 }

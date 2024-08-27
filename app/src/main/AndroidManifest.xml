@@ -23,9 +23,6 @@
             android:name=".admin.CommitteeMemberDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".admin.ManageCommitteeActivity"
-            android:exported="false" />
-        <activity
             android:name=".TeamDetailsActivity"
             android:exported="false" />
         <activity

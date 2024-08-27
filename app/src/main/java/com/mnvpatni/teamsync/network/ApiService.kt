@@ -1,6 +1,8 @@
 package com.mnvpatni.teamsync.network
 
 import com.mnvpatni.teamsync.models.CommitteeMembersModel
+import com.mnvpatni.teamsync.models.CommitteeMembersUpdateResponse
+import com.mnvpatni.teamsync.models.CommitteeModel
 import com.mnvpatni.teamsync.models.MealResponse
 import com.mnvpatni.teamsync.models.MealUpdateRequest
 import com.mnvpatni.teamsync.models.RestRoomResponse
@@ -58,5 +60,19 @@ interface ApiService {
         @Query("team_id") teamId: String,
         @Query("call_from") callFrom: String
     ): UpdateAttendanceModel
+
+    //get committee members
+    @GET("verify/committee/member")
+    suspend fun getCommitteeMembers(): Response<CommitteeModel>
+
+    //update committee members
+    @POST
+    suspend fun updateCommitteeMembers(
+        @Query("uid") uid: String,
+        @Query("user_type") user_type: String,
+        @Query("post") post: String,
+        @Query("access_to") access_to: String,
+        @Query("status") status: String
+    ): CommitteeMembersUpdateResponse
 
 }

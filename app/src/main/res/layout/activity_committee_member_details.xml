@@ -51,6 +51,7 @@
         android:layout_height="@dimen/_40sdp"
         android:background="@drawable/basic_outline_box"
         android:layout_marginTop="@dimen/_10sdp"
+        android:entries="@array/user_type"
         android:paddingStart="@dimen/_5sdp"
         app:layout_constraintStart_toStartOf="@+id/til_name"
         app:layout_constraintTop_toBottomOf="@+id/til_name" />
@@ -89,10 +90,11 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Spinner
-        android:id="@+id/status"
+        android:id="@+id/spinner_status"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         android:background="@drawable/basic_outline_box"
+        android:entries="@array/status"
         android:paddingStart="@dimen/_5sdp"
         android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,6 +117,16 @@
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/status" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_status" />
+
+    <TextView
+        android:id="@+id/tv_uid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UID"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,7 +19,6 @@
     <string name="nav_close">Close</string>
     <string name="present">Is Present</string>
     <string name="got_kit">Got Kit</string>
-    <string name="update">Update</string>
 
     <string name="home">Home</string>
     <string name="meal_scanner">Meal</string>
@@ -44,6 +43,16 @@
         <item>Breakfast</item>
         <item>Lunch</item>
         <item>Dinner</item>
+    </string-array>
+
+    <string-array name="user_type">
+        <item>Admin</item>
+        <item>Volunteer</item>
+    </string-array>
+
+    <string-array name="status">
+        <item>Approved</item>
+        <item>Rejected</item>
     </string-array>
 
 </resources>
