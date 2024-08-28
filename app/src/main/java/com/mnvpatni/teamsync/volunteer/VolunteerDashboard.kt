@@ -1,7 +1,10 @@
 package com.mnvpatni.teamsync.volunteer
 
+import android.Manifest
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,8 +12,10 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -69,6 +74,10 @@ class VolunteerDashboard : AppCompatActivity() {
         val tvUsername = navView.getHeaderView(0).findViewById<TextView>(R.id.tv_username)
         val tvPost = navView.getHeaderView(0).findViewById<TextView>(R.id.tv_post)
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            askNotificationPermission()
+        }
+
         //Setting up profile
         binding.tvUsername.text = currentUser!!.displayName
         binding.tvPost.text = authSharedPref.userPost()
@@ -94,6 +103,7 @@ class VolunteerDashboard : AppCompatActivity() {
                 binding.tvNothing.visibility = View.GONE
                 binding.rvTeams.visibility = View.VISIBLE
             }
+            binding.tvTeams.text = "Teams - ${participantAdapter.itemCount}"
         }
         binding.rvTeams.adapter = participantAdapter
         binding.rvTeams.layoutManager = LinearLayoutManager(this)
@@ -143,6 +153,7 @@ class VolunteerDashboard : AppCompatActivity() {
                         if (teams.isNotEmpty()) {
                             participantAdapter.updateData(teams)
                             binding.rvTeams.adapter = participantAdapter
+                            binding.tvTeams.text = "Teams - ${participantAdapter.itemCount}"
                         } else {
                             Snackbar.make(binding.root, "No teams found.", Snackbar.LENGTH_SHORT).show()
                         }
@@ -171,6 +182,41 @@ class VolunteerDashboard : AppCompatActivity() {
                 }
             }
             .show()
+    }
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
+                    // Permission is already granted
+                    return
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    // Show a dialog or some rationale to explain why the permission is needed
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("Notification Permission Required")
+                        .setMessage("We need permission to send you notifications.")
+                        .setPositiveButton("OK") { _, _ ->
+                            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .show()
+                }
+                else -> {
+                    // Directly ask for the permission
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            Toast.makeText(this, "You are now eligible to receive direct updates.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Permission denied. Try again.", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

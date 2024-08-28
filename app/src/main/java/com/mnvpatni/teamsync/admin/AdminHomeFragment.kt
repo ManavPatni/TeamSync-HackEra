@@ -46,6 +46,7 @@ class AdminHomeFragment : Fragment() {
                 binding.tvNothing.visibility = View.GONE
                 binding.rvTeams.visibility = View.VISIBLE
             }
+            binding.tvTeams.text = "Teams - ${participantAdapter.itemCount}"
         }
         binding.rvTeams.adapter = participantAdapter
         binding.rvTeams.layoutManager = LinearLayoutManager(context)
@@ -86,6 +87,7 @@ class AdminHomeFragment : Fragment() {
                         if (teams.isNotEmpty()) {
                             participantAdapter.updateData(teams)
                             binding.rvTeams.adapter = participantAdapter
+                            binding.tvTeams.text = "Teams - ${participantAdapter.itemCount}"
                         } else {
                             Snackbar.make(binding.root, "No teams found.", Snackbar.LENGTH_SHORT).show()
                         }

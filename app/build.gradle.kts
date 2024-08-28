@@ -58,6 +58,10 @@ dependencies {
     //Firebase
     //BoM
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+
+    //messaging
+    implementation("com.google.firebase:firebase-messaging")
+
     //crashlytics
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
