@@ -31,7 +31,22 @@ class AdminHomeFragment : Fragment() {
     ): View {
         binding = FragmentAdminHomeBinding.inflate(layoutInflater)
 
-        participantAdapter = TeamDetailAdapter(context = requireContext())
+        binding.shimmerLayout.visibility = View.VISIBLE
+        binding.rvTeams.visibility = View.INVISIBLE
+        binding.shimmerLayout.startShimmer()
+
+        participantAdapter = TeamDetailAdapter(context = requireContext()){ itemCount ->
+            // Show or hide the "Nothing Found" message based on item count
+            if (itemCount == 0) {
+                binding.animNothing.visibility = View.VISIBLE
+                binding.tvNothing.visibility = View.VISIBLE
+                binding.rvTeams.visibility = View.GONE
+            } else {
+                binding.animNothing.visibility = View.GONE
+                binding.tvNothing.visibility = View.GONE
+                binding.rvTeams.visibility = View.VISIBLE
+            }
+        }
         binding.rvTeams.adapter = participantAdapter
         binding.rvTeams.layoutManager = LinearLayoutManager(context)
 
@@ -60,6 +75,11 @@ class AdminHomeFragment : Fragment() {
                 val response = RetrofitInstance.api.getTeams()
 
                 if (response.isSuccessful) {
+
+                    binding.shimmerLayout.visibility = View.GONE
+                    binding.rvTeams.visibility = View.VISIBLE
+                    binding.shimmerLayout.stopShimmer()
+
                     val apiResponse = response.body()
                     if (apiResponse != null && apiResponse.statusCode == 200) {
                         val teams = apiResponse.body

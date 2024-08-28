@@ -9,4 +9,5 @@
     <color name="secondaryText">#000000</color>
 
     <color name="light_gray">#AAA3A3</color>
+    <color name="shimmerColor">#C2C2C2</color>
 </resources>

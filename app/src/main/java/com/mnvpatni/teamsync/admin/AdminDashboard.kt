@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.mnvpatni.teamsync.R
 import com.mnvpatni.teamsync.databinding.ActivityAdminDashboardBinding
@@ -66,15 +67,28 @@ class AdminDashboard : AppCompatActivity() {
         //Hamburger menu item onclick listener
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.nav_home -> replaceFragment(AdminHomeFragment())
-                R.id.nav_manageCommittee -> replaceFragment(CommitteeMembersFragment())
+                R.id.nav_home -> {
+                    replaceFragment(AdminHomeFragment())
+                    drawerLayout.closeDrawer(navView)
+                }
+                R.id.nav_permittedZone -> {
+                    Snackbar.make(binding.main,"This feature is currently not available..",Snackbar.LENGTH_SHORT).show()
+                    drawerLayout.closeDrawer(navView)
+                }
+                R.id.nav_manageCommittee -> {
+                    replaceFragment(CommitteeMembersFragment())
+                    drawerLayout.closeDrawer(navView)
+                }
                 R.id.nav_mealScanner -> startActivity(
                     Intent(
                         this,
                         FoodScannerActivity::class.java
                     )
                 )
-
+                R.id.nav_manageTeam -> {
+                    Snackbar.make(binding.main,"This feature is currently not available..",Snackbar.LENGTH_SHORT).show()
+                    drawerLayout.closeDrawer(navView)
+                }
                 R.id.nav_restRoomScanner -> startActivity(
                     Intent(
                         this,

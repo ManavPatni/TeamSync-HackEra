@@ -15,7 +15,8 @@ import kotlin.collections.ArrayList
 
 class TeamDetailAdapter(
     private var teams: MutableList<Team> = mutableListOf(),
-    private val context: Context
+    private val context: Context,
+    private val onItemCountChanged: (Int) -> Unit
 ) : RecyclerView.Adapter<TeamDetailAdapter.ParticipantViewHolder>() {
 
     private var filteredTeams: MutableList<Team> = ArrayList(teams)
@@ -70,6 +71,9 @@ class TeamDetailAdapter(
                 }
             }
         }
+
+        onItemCountChanged(filteredTeams.size)
+
         notifyDataSetChanged()
     }
 
@@ -80,6 +84,9 @@ class TeamDetailAdapter(
             FilterCriteria.PRESENT -> filteredTeams.addAll(teams.filter { it.isPresent == 1 })
             FilterCriteria.RECEIVED_KIT -> filteredTeams.addAll(teams.filter { it.receivedKit == 1 })
         }
+
+        onItemCountChanged(filteredTeams.size)
+
         notifyDataSetChanged()
     }
 

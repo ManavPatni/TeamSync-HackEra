@@ -59,6 +59,11 @@ class CommitteeMemberDetailsActivity : AppCompatActivity() {
         binding.btnUpdate.setOnClickListener {
             update()
         }
+
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
     }
 
     private fun update() {

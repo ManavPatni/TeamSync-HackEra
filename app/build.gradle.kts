@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
+    //crashlytics
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -20,7 +22,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -56,6 +59,10 @@ dependencies {
     //Firebase
     //BoM
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+    //crashlytics
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
+
     //Analytics
     implementation("com.google.firebase:firebase-analytics")
     //Auth
@@ -93,5 +100,8 @@ dependencies {
     //country picker
     implementation("com.hbb20:ccp:2.7.3")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.14")
+
+    //shimmer
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 
 }

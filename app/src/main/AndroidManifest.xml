@@ -26,9 +26,6 @@
             android:name=".TeamDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".TeamInfoActivity"
-            android:exported="false" />
-        <activity
             android:name=".scanner.FoodScannerActivity"
             android:exported="false" />
         <activity
