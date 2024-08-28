@@ -12,11 +12,20 @@ import com.mnvpatni.teamsync.R
 import com.mnvpatni.teamsync.TeamDetailsActivity
 import com.mnvpatni.teamsync.admin.CommitteeMemberDetailsActivity
 import com.mnvpatni.teamsync.models.CommitteeMemberModel
+import com.mnvpatni.teamsync.models.Team
+import java.util.Locale
 
-class CommitteeMembersAdapter(private val context: Context, private var members: List<CommitteeMemberModel>) : RecyclerView.Adapter<CommitteeMembersAdapter.MemberViewHolder>() {
+class CommitteeMembersAdapter(
+    private val context: Context,
+    private var members: List<CommitteeMemberModel>,
+    private val onItemCountChanged: (Int) -> Unit
+) : RecyclerView.Adapter<CommitteeMembersAdapter.MemberViewHolder>() {
+
+    private var filteredMembers: MutableList<CommitteeMemberModel> = ArrayList(members)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_team_member, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_team_member, parent, false)
         return MemberViewHolder(view)
     }
 
@@ -46,6 +55,26 @@ class CommitteeMembersAdapter(private val context: Context, private var members:
         val name: TextView = itemView.findViewById(R.id.tv_memberName)
         val ageGender: TextView = itemView.findViewById(R.id.tv_memberGenderAge)
         val checkbox: CheckBox = itemView.findViewById(R.id.checkbox)
+    }
+
+    fun filter(query: String) {
+        filteredMembers.clear()
+        if (query.isEmpty()) {
+            filteredMembers.addAll(members)
+        } else {
+            val lowerCaseQuery = query.lowercase(Locale.getDefault())
+            for (member in members) {
+                if (member.full_name.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
+                    member.user_type.lowercase(Locale.getDefault()).contains(lowerCaseQuery)
+                ) {
+                    filteredMembers.add(member)
+                }
+            }
+        }
+
+        onItemCountChanged(filteredMembers.size)
+
+        notifyDataSetChanged()
     }
 
     fun updateData(newMembers: List<CommitteeMemberModel>) {

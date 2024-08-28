@@ -2,6 +2,8 @@ package com.mnvpatni.teamsync.admin
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -27,11 +29,35 @@ class CommitteeMembersFragment : Fragment() {
     ): View {
         binding = FragmentCommitteeMembersBinding.inflate(layoutInflater)
 
-        committeeMembersAdapter = CommitteeMembersAdapter(requireContext(), emptyList())
+        binding.shimmerLayout.visibility = View.VISIBLE
+        binding.rvCommitteeMembers.visibility = View.INVISIBLE
+        binding.shimmerLayout.startShimmer()
+
+        committeeMembersAdapter = CommitteeMembersAdapter(requireContext(), emptyList()){ itemCount ->
+            // Show or hide the "Nothing Found" message based on item count
+            if (itemCount == 0) {
+                binding.animNothing.visibility = View.VISIBLE
+                binding.tvNothing.visibility = View.VISIBLE
+                binding.rvCommitteeMembers.visibility = View.GONE
+            } else {
+                binding.animNothing.visibility = View.GONE
+                binding.tvNothing.visibility = View.GONE
+                binding.rvCommitteeMembers.visibility = View.VISIBLE
+            }
+        }
         binding.rvCommitteeMembers.layoutManager = LinearLayoutManager(context)
         binding.rvCommitteeMembers.adapter = committeeMembersAdapter
 
         getMembers()
+
+        // Attach TextWatcher to the search EditText
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                committeeMembersAdapter.filter(s.toString())
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         return binding.root
     }
@@ -41,6 +67,10 @@ class CommitteeMembersFragment : Fragment() {
             try {
                 // Call the API to get the members
                 val response = RetrofitInstance.api.getCommitteeMembers()
+
+                binding.shimmerLayout.visibility = View.GONE
+                binding.rvCommitteeMembers.visibility = View.VISIBLE
+                binding.shimmerLayout.stopShimmer()
 
                 if (response.isSuccessful) {
                     val apiResponse = response.body()

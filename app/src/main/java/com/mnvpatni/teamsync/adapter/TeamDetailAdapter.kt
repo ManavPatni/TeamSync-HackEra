@@ -1,5 +1,6 @@
 package com.mnvpatni.teamsync.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -66,7 +67,8 @@ class TeamDetailAdapter(
             val lowerCaseQuery = query.lowercase(Locale.getDefault())
             for (team in teams) {
                 if (team.team_name.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
-                    team.college.lowercase(Locale.getDefault()).contains(lowerCaseQuery)) {
+                    team.college.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
+                    team.team_id.lowercase(Locale.getDefault()).contains(lowerCaseQuery)){
                     filteredTeams.add(team)
                 }
             }
