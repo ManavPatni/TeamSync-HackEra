@@ -68,7 +68,11 @@ class CommitteeMemberDetailsActivity : AppCompatActivity() {
                 val userType = binding.userType.selectedItem.toString() // Get the selected item text
                 val post = binding.etPost.text.toString()
                 val accessTo = binding.etAccessTo.text.toString()
-                val status = binding.spinnerStatus.selectedItem.toString() // Get the selected item text
+                val status = when (binding.spinnerStatus.selectedItem.toString()) {
+                    "Approved" -> 1
+                    "Rejected" -> 0
+                    else -> 0
+                }.toString()
 
                 // Call the API to update committee members
                 val response = RetrofitInstance.api.updateCommitteeMembers(

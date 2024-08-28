@@ -66,7 +66,7 @@ interface ApiService {
     suspend fun getCommitteeMembers(): Response<CommitteeModel>
 
     //update committee members
-    @POST
+    @POST("verify/committee/member/update")
     suspend fun updateCommitteeMembers(
         @Query("uid") uid: String,
         @Query("user_type") user_type: String,
