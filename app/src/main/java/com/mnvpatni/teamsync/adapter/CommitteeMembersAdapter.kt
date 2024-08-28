@@ -9,10 +9,8 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mnvpatni.teamsync.R
-import com.mnvpatni.teamsync.TeamDetailsActivity
 import com.mnvpatni.teamsync.admin.CommitteeMemberDetailsActivity
 import com.mnvpatni.teamsync.models.CommitteeMemberModel
-import com.mnvpatni.teamsync.models.Team
 import java.util.Locale
 
 class CommitteeMembersAdapter(
@@ -30,7 +28,7 @@ class CommitteeMembersAdapter(
     }
 
     override fun onBindViewHolder(holder: MemberViewHolder, position: Int) {
-        val member = members[position]
+        val member = filteredMembers[position]
         holder.memberNumber.text = (position + 1).toString()
         holder.name.text = member.full_name
         holder.ageGender.text = member.post ?: "N/A"
@@ -48,7 +46,7 @@ class CommitteeMembersAdapter(
         }
     }
 
-    override fun getItemCount(): Int = members.size
+    override fun getItemCount(): Int = filteredMembers.size
 
     class MemberViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val memberNumber: TextView = itemView.findViewById(R.id.tv_memberNumber)
@@ -65,7 +63,8 @@ class CommitteeMembersAdapter(
             val lowerCaseQuery = query.lowercase(Locale.getDefault())
             for (member in members) {
                 if (member.full_name.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
-                    member.user_type.lowercase(Locale.getDefault()).contains(lowerCaseQuery)
+                    member.user_type.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
+                    member.post?.lowercase(Locale.getDefault())?.contains(lowerCaseQuery) == true
                 ) {
                     filteredMembers.add(member)
                 }
@@ -73,12 +72,13 @@ class CommitteeMembersAdapter(
         }
 
         onItemCountChanged(filteredMembers.size)
-
         notifyDataSetChanged()
     }
 
     fun updateData(newMembers: List<CommitteeMemberModel>) {
         members = newMembers
+        filteredMembers.clear()
+        filteredMembers.addAll(newMembers)
         notifyDataSetChanged() // Ensure the RecyclerView updates properly
     }
 }
