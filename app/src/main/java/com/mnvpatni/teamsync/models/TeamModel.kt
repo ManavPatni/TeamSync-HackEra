@@ -16,6 +16,8 @@ data class Team(
     val college: String,           // The college associated with the team
     val city: String,              // The city where the team is located
     val state: String,             // The state where the team is located
+    val isPresent: Int,             // The state where the team is located
+    val receivedKit: Int,             // The state where the team is located
     val members: List<Member>      // A list of members belonging to the team
 )
 

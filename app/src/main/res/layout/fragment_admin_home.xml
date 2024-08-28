@@ -39,10 +39,25 @@
 
     </RelativeLayout>
 
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_45sdp"
+        android:hint="Search"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="@dimen/_10sdp"
+        android:background="@drawable/basic_outline_box"
+        android:padding="@dimen/_10sdp"
+        android:inputType="text"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5ssp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_teams"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/team_card" />
+        tools:listitem="@layout/team_card"
+        android:layout_marginTop="@dimen/_10ssp"/>
 
 </LinearLayout>

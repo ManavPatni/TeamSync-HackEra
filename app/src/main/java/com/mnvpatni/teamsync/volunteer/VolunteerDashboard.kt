@@ -3,6 +3,8 @@ package com.mnvpatni.teamsync.volunteer
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
@@ -12,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -71,6 +74,9 @@ class VolunteerDashboard : AppCompatActivity() {
             .transform(CircleCrop())
             .into(binding.ivProfilePic)
 
+        binding.tvSortBy.setOnClickListener {
+            showSortByDialog()
+        }
 
         participantAdapter = TeamDetailAdapter(context = this)
         binding.rvTeams.adapter = participantAdapter
@@ -87,6 +93,16 @@ class VolunteerDashboard : AppCompatActivity() {
             }
             true
         }
+
+        // Attach TextWatcher to the search EditText
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                participantAdapter.filter(s.toString())
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
     }
 
     private fun getTeams() {
@@ -116,6 +132,20 @@ class VolunteerDashboard : AppCompatActivity() {
                 Toast.makeText(this@VolunteerDashboard, "An unexpected error occurred: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun showSortByDialog() {
+        val options = arrayOf("All", "Present", "Received Kit")
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Sort by")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> participantAdapter.filterByCriteria(TeamDetailAdapter.FilterCriteria.ALL)
+                    1 -> participantAdapter.filterByCriteria(TeamDetailAdapter.FilterCriteria.PRESENT)
+                    2 -> participantAdapter.filterByCriteria(TeamDetailAdapter.FilterCriteria.RECEIVED_KIT)
+                }
+            }
+            .show()
     }
 
 }
